@@ -44,26 +44,12 @@ Visualizer::Visualizer():
         {Measurement::YAW, "yaw"},
         {Measurement::ROLL, "roll"}
     };
-
-    LOCATIONS = {
-        {OccupantLocation::UNKNOWN,"UNKNOWN" },
-        {OccupantLocation::FIRST_ROW_DRIVER_SIDE,"FIRST_ROW_DRIVER_SIDE" },
-        { OccupantLocation::FIRST_ROW_CENTER,"FIRST_ROW_CENTER" },
-        { OccupantLocation::FIRST_ROW_PASSENGER_SIDE,"FIRST_ROW_PASSENGER_SIDE" },
-        { OccupantLocation::SECOND_ROW_LEFT,"SECOND_ROW_LEFT" },
-        { OccupantLocation::SECOND_ROW_CENTER,"SECOND_ROW_CENTER" },
-        { OccupantLocation::SECOND_ROW_RIGHT,"SECOND_ROW_RIGHT" },
-        { OccupantLocation::THIRD_ROW_LEFT,"THIRD_ROW_LEFT" },
-        { OccupantLocation::THIRD_ROW_CENTER,"THIRD_ROW_CENTER" },
-        {OccupantLocation::THIRD_ROW_RIGHT,"THIRD_ROW_RIGHT" }
-    };
 }
 
 void Visualizer::drawFaceMetrics(Face face, std::vector<Point> bounding_box, bool draw_face_id)
 {
     //Draw Right side metrics
     int padding = bounding_box[0].y; //Top left Y
-    drawText("location", LOCATIONS[face.getOccupantLocation()], cv::Point(bounding_box[1].x, padding += spacing), false, cv::Scalar(255, 255, 255));
 
     auto expressions = face.getExpressions();
     for (auto& exp : EXPRESSIONS) {
