@@ -23,7 +23,7 @@ int main(int argsc, char ** argsv) {
 
     try {
 
-        const std::vector<int> DEFAULT_RESOLUTION {640, 480};
+        const std::vector<int> DEFAULT_RESOLUTION {1280, 720};
 
         // cmd line options
         affdex::path data_dir;
