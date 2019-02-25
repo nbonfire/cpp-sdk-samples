@@ -56,6 +56,7 @@ public:
     std::vector<std::pair<affdex::vision::Emotion, std::string>> EMOTIONS;
     std::vector<std::pair<affdex::vision::Measurement, std::string>> HEAD_ANGLES;
     std::map<affdex::vision::DominantEmotion, std::string> DOMINANT_EMOTIONS;
+    std::map<affdex::vision::Mood, std::string> MOODS;
 
 private:
 

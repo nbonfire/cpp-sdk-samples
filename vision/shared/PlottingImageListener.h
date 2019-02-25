@@ -138,7 +138,7 @@ public:
             }
 
             vision::Mood mood = f.getMood();
-            out_stream << static_cast<int>(mood) << ",";
+            out_stream << viz.MOODS[mood] << ",";
 
             vision::DominantEmotionMetric dominant_emotion_metric = f.getDominantEmotion();
             out_stream << viz.DOMINANT_EMOTIONS[dominant_emotion_metric.dominantEmotion] << "," << dominant_emotion_metric.confidence;

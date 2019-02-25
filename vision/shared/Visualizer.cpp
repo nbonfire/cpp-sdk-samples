@@ -63,6 +63,14 @@ Visualizer::Visualizer():
         {DominantEmotion::DISGUST, "disgust"},
         {DominantEmotion::FEAR, "fear"},
     };
+
+    MOODS = {
+        {Mood::UNKNOWN, "UNKNOWN"},
+        {Mood::NEUTRAL, "NEUTRAL"},
+        {Mood::NEGATIVE, "NEGATIVE"},
+        {Mood::POSITIVE, "POSITIVE"},
+    };
+
 }
 
 void Visualizer::drawFaceMetrics(Face face, std::vector<Point> bounding_box, bool draw_face_id)
