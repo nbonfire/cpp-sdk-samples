@@ -119,7 +119,6 @@ public:
                 << f.getId() << ","
                 << std::setprecision(0) << bbox[0].x << "," << bbox[0].y << "," << bbox[1].x << "," << bbox[1].y << "," << std::setprecision(4)
                 << f.getConfidence() << ","
-                << viz.LOCATIONS[f.getOccupantLocation()] << ","
                 << f.getMeasurements().at(vision::Measurement::INTEROCULAR_DISTANCE) << ",";
 
             auto measurements = f.getMeasurements();
@@ -215,10 +214,6 @@ public:
             }
         }
         return true;
-    }
-
-    std::map<vision::OccupantLocation, std::string> getLocationNames() const {
-        return viz.LOCATIONS;
     }
 
     void reset() {
