@@ -52,6 +52,17 @@ Visualizer::Visualizer():
         {Measurement::YAW, "yaw"},
         {Measurement::ROLL, "roll"}
     };
+
+    DOMINANT_EMOTIONS = {
+        {DominantEmotion::UNKNOWN, "unknown"},
+        {DominantEmotion::NEUTRAL, "neutral"},
+        {DominantEmotion::JOY, "joy"},
+        {DominantEmotion::ANGER, "anger"},
+        {DominantEmotion::SURPRISE, "surprise"},
+        {DominantEmotion::SADNESS, "sadness"},
+        {DominantEmotion::DISGUST, "disgust"},
+        {DominantEmotion::FEAR, "fear"},
+    };
 }
 
 void Visualizer::drawFaceMetrics(Face face, std::vector<Point> bounding_box, bool draw_face_id)

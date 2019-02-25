@@ -23,7 +23,7 @@ int main(int argsc, char ** argsv) {
 
     try {
 
-        const std::vector<int> DEFAULT_RESOLUTION {1280, 720};
+        const std::vector<int> DEFAULT_RESOLUTION {640, 480};
 
         // cmd line options
         affdex::path data_dir;
@@ -164,8 +164,8 @@ int main(int argsc, char ** argsv) {
         frame_detector->stop();
     }
     catch (...) {
-//        std::cerr << "Encountered an exception " << ex.what();
-//        return 1;
+        std::cerr << "Encountered an exception ";
+        return 1;
     }
 
     return 0;
