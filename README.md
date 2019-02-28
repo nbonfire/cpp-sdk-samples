@@ -4,7 +4,7 @@ Welcome to our repository on GitHub! Here you will find example code to get you 
 
 Build Status
 ------------
-- Ubuntu: [![Build Status](https://travis-ci.org/Affectiva/cpp-sdk-samples.svg?branch=auto)](https://travis-ci.org/Affectiva/cpp-sdk-samples)
+- Ubuntu: [![Build Status](https://travis-ci.org/Affectiva/cpp-sdk-samples.svg?branch=auto-sdk-1.2)](https://travis-ci.org/Affectiva/cpp-sdk-samples)
 
 Dependencies
 ------------
