@@ -1,12 +1,12 @@
 # A Docker file to be used for building the sample applications for the Linux SDK Ubuntu 16.04
 #
 # build:
-# $ docker build --build-arg AFFECTIVA_AUTO_SDK_1_1_URL=$AFFECTIVA_AUTO_SDK_1_1_URL --build-arg BRANCH=$BRANCH --tag=v1.1.0:affectiva-auto .
+# $ docker build --build-arg AFFECTIVA_AUTO_SDK_1_2_URL=$AFFECTIVA_AUTO_SDK_1_2_URL --build-arg BRANCH=$BRANCH --tag=v1.2.0:affectiva-auto .
 #
 # the result will be an image that has the tar'ed artifact of the sample app and all of its dependencies installed
 #
 # run this container interactively:
-# $ docker run -it --rm v1.1.0:affectiva-auto
+# $ docker run -it --rm v1.2.0:affectiva-auto
 #
 # running the webcam or mic demos interactively requires some privileges, devices, and access to the X11 socket:
 # $ docker run -it --privileged --rm --net=host \
@@ -15,7 +15,7 @@
 #        -e DISPLAY=$DISPLAY     \
 #        --device=/dev/video0 \
 #        --device=/dev/snd \
-#        v1.1.0:affectiva-auto
+#        v1.2.0:affectiva-auto
 # Then from the shell, run the following for the webcam demo:
 # $ /opt/testapp-artifact/build/vision/bin/frame-detector-webcam-demo -d $AUTO_SDK_DIR/data/vision
 # or for the mic demo:
@@ -44,7 +44,7 @@ ENV BUILD_DIR /opt/build
 ENV VISION_BUILD_DIR /opt/build/vision
 ENV SPEECH_BUILD_DIR /opt/build/speech
 ENV ARTIFACT_DIR /opt/testapp-artifact
-ENV AUTO_SDK_DIR $SRC_DIR/affectiva-auto-sdk-1.1.0
+ENV AUTO_SDK_DIR $SRC_DIR/affectiva-auto-sdk-1.2.0
 ENV LD_LIBRARY_PATH $AUTO_SDK_DIR/lib
 ENV LD_PRELOAD /usr/lib/x86_64-linux-gnu/libopencv_core.so.2.4
 
@@ -69,8 +69,8 @@ RUN wget --quiet https://sourceforge.net/projects/boost/files/boost/1.63.0/boost
 
 #### DOWNLOAD AFFECTIVA AUTO SDK ####
 WORKDIR $SRC_DIR
-ARG AFFECTIVA_AUTO_SDK_1_1_URL
-RUN wget --quiet $AFFECTIVA_AUTO_SDK_1_1_URL  &&\
+ARG AFFECTIVA_AUTO_SDK_1_2_URL
+RUN wget --quiet $AFFECTIVA_AUTO_SDK_1_2_URL  &&\
     tar -xf affectiva-auto-sdk* && \
     rm -r $SRC_DIR/affectiva-auto-sdk-ubuntu-xenial-xerus-*
 
