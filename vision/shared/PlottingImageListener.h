@@ -35,6 +35,7 @@ public:
         for (const auto& angle : viz.HEAD_ANGLES) out_stream << angle.second << ",";
         for (const auto& emotion : viz.EMOTIONS) out_stream << emotion.second << ",";
         for (const auto& expression : viz.EXPRESSIONS) out_stream << expression.second << ",";
+        out_stream << "mood,dominantEmotion,dominantEmotionConfidence";
         out_stream << std::endl;
         out_stream.precision(2);
         out_stream << std::fixed;
@@ -136,6 +137,12 @@ public:
                 out_stream << expressions.at(exp.first) << ",";
             }
 
+            vision::Mood mood = f.getMood();
+            out_stream << viz.MOODS[mood] << ",";
+
+            vision::DominantEmotionMetric dominant_emotion_metric = f.getDominantEmotion();
+            out_stream << viz.DOMINANT_EMOTIONS[dominant_emotion_metric.dominantEmotion] << "," << dominant_emotion_metric.confidence;
+
             out_stream << std::endl;
         }
     }
@@ -184,36 +191,6 @@ public:
                 << " faces: "<< faces.size() << std::endl;
             }
         }
-    }
-
-    bool validate(std::set<vision::Expression> supported) {
-        for (auto pair: viz.EXPRESSIONS) {
-            if (supported.find(pair.first) == supported.end()) {
-                std::cerr << "\"" << pair.second << "\": is not supported by the current data directory" << std::endl;
-                return false;
-            }
-        }
-        return true;
-    }
-
-    bool validate(std::set<vision::Emotion> supported) {
-        for (auto pair: viz.EMOTIONS) {
-            if (supported.find(pair.first) == supported.end()) {
-                std::cerr << "\"" << pair.second << "\": is not supported by the current data directory" << std::endl;
-                return false;
-            }
-        }
-        return true;
-    }
-
-    bool validate(std::set<vision::Measurement> supported) {
-        for (auto pair: viz.HEAD_ANGLES) {
-            if (supported.find(pair.first) == supported.end()) {
-                std::cerr << "\"" << pair.second << "\": is not supported by the current data directory" << std::endl;
-                return false;
-            }
-        }
-        return true;
     }
 
     void reset() {

@@ -164,8 +164,8 @@ int main(int argsc, char ** argsv) {
         frame_detector->stop();
     }
     catch (...) {
-//        std::cerr << "Encountered an exception " << ex.what();
-//        return 1;
+        std::cerr << "Encountered an exception ";
+        return 1;
     }
 
     return 0;
