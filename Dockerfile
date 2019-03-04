@@ -98,3 +98,4 @@ RUN mkdir -p $ARTIFACT_DIR &&\
     tar -cf ../testapp-artifact.tar.gz .
 
 WORKDIR $ARTIFACT_DIR
+ENV LD_LIBRARY_PATH $ARTIFACT_DIR/affectiva-auto-sdk-1.2.0/lib
