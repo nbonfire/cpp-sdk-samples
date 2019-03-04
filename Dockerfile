@@ -98,4 +98,7 @@ RUN mkdir -p $ARTIFACT_DIR &&\
     tar -cf ../testapp-artifact.tar.gz .
 
 WORKDIR $ARTIFACT_DIR
-ENV LD_LIBRARY_PATH $ARTIFACT_DIR/affectiva-auto-sdk-1.2.0/lib
+ENV AUTO_SDK_DIR $ARTIFACT_DIR/affectiva-auto-sdk-1.2.0
+ENV LD_LIBRARY_PATH $AUTO_SDK_DIR/lib
+ENV VISION_DATA_DIR $AUTO_SDK_DIR/data/vision
+ENV SPEECH_DATA_DIR $AUTO_SDK_DIR/data/speech
