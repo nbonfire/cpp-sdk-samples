@@ -122,7 +122,6 @@ int main(int argsc, char ** argsv) {
     // cmd line args
     affdex::path data_dir;
     affdex::path video_path;
-    affdex::path locations_file;
     unsigned int sampling_frame_rate;
     unsigned int processing_frame_rate = 0;
     bool draw_display;
