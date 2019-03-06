@@ -109,6 +109,8 @@ public:
             for (const auto& angle : viz.HEAD_ANGLES) out_stream << "nan,";
             for (const auto& emotion : viz.EMOTIONS) out_stream << "nan,";
             for (const auto& expression : viz.EXPRESSIONS) out_stream << "nan,";
+            out_stream << timeStamp
+                << "nan,nan,nan,"; // mood, dominant emotion, dominant emotion confidence
             out_stream << std::endl;
         }
 
