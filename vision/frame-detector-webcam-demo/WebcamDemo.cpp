@@ -27,7 +27,6 @@ int main(int argsc, char ** argsv) {
 
         // cmd line options
         affdex::path data_dir;
-        affdex::path locations_file;
         std::vector<int> resolution;
         int process_framerate;
         int camera_framerate;
