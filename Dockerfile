@@ -93,12 +93,9 @@ RUN mkdir -p $SPEECH_BUILD_DIR &&\
 #### CREATE THE ARTIFACT ####
 WORKDIR $ARTIFACT_DIR
 RUN mkdir -p $ARTIFACT_DIR &&\
-    mv $AUTO_SDK_DIR . &&\
-    mv $BUILD_DIR . &&\
+    cp -R $AUTO_SDK_DIR . &&\
+    cp -R $BUILD_DIR . &&\
     tar -cf ../testapp-artifact.tar.gz .
 
 WORKDIR $ARTIFACT_DIR
-ENV AUTO_SDK_DIR $ARTIFACT_DIR/affectiva-auto-sdk-1.2.0
-ENV LD_LIBRARY_PATH $AUTO_SDK_DIR/lib
-ENV VISION_DATA_DIR $AUTO_SDK_DIR/data/vision
-ENV SPEECH_DATA_DIR $AUTO_SDK_DIR/data/speech
+
