@@ -55,7 +55,7 @@ int main(int argsc, char ** argsv) {
             ("cid", po::value< int >(&camera_id)->default_value(0), "Camera ID.")
             ("numFaces", po::value< unsigned int >(&num_faces)->default_value(1), "Number of faces to be tracked.")
             ("draw", po::value< bool >(&draw_display)->default_value(true), "Draw metrics on screen.")
-            ("sync", po::bool_switch(&sync)->default_value(false), "Process frames synchronously.")
+            ("sync", po::bool_switch(&sync)->default_value(false), "Process frames synchronously. Note this will process all frames captured by the camera and will ignore the value in --pfps")
             ("quiet,q", po::bool_switch(&disable_logging)->default_value(false), "Disable logging to console")
             ("face_id", po::value< bool >(&draw_id)->default_value(true), "Draw face id on screen. Note: Drawing to screen must be enabled.")
         ;
@@ -100,7 +100,7 @@ int main(int argsc, char ** argsv) {
         // create the FrameDetector
         unique_ptr<vision::Detector> frame_detector;
         if (sync) {
-            frame_detector = std::unique_ptr<vision::Detector>(new vision::SyncFrameDetector(data_dir, process_framerate, num_faces));
+            frame_detector = std::unique_ptr<vision::Detector>(new vision::SyncFrameDetector(data_dir, num_faces));
         }
         else {
             frame_detector = std::unique_ptr<vision::Detector>(new vision::FrameDetector(data_dir, process_framerate, num_faces));

@@ -20,10 +20,10 @@ public:
     VideoReader(const boost::filesystem::path& file_path, const unsigned int sampling_frame_rate) :
         sampling_frame_rate(sampling_frame_rate) {
 
-        if (!(sampling_frame_rate == -1 || sampling_frame_rate > 0))
-            throw runtime_error("Specified sampling rate is <= 0");
+        if (sampling_frame_rate < 0)
+            throw runtime_error("Specified sampling rate is < 0");
 
-        last_timestamp_ms = 0 - 1 / sampling_frame_rate; // Initialize it so we still get timestamp 0 with sampling
+        last_timestamp_ms = sampling_frame_rate == 0 ? -1 : (0 - 1000 / sampling_frame_rate); // Initialize so that with sampling, we always process the first frame.
 
 
         std::set<boost::filesystem::path> SUPPORTED_EXTS = {
@@ -123,10 +123,8 @@ int main(int argsc, char ** argsv) {
     affdex::path data_dir;
     affdex::path video_path;
     unsigned int sampling_frame_rate;
-    unsigned int processing_frame_rate = 0;
     bool draw_display;
     unsigned int num_faces;
-    bool sync = false;
     bool loop = false;
     bool draw_id = false;
     bool disable_logging = false;
@@ -143,11 +141,9 @@ int main(int argsc, char ** argsv) {
     ("data,d", po::value< affdex::path >(&data_dir)->default_value(affdex::path("data"), std::string("data")), "Path to the data folder")
     ("input,i", po::value< affdex::path >(&video_path)->required(), "Video file to processs")
 #endif // _WIN32
-    ("sfps", po::value<unsigned int>(&sampling_frame_rate)->default_value(Detector::DEFAULT_PROCESSING_FRAMERATE), "Input sampling frame rate.")
-    ("pfps", po::value<unsigned int>(&processing_frame_rate), "Max processing frame rate.")
+    ("sfps", po::value<unsigned int>(&sampling_frame_rate)->default_value(0), "Input sampling frame rate. Default is 0, which means the app will respect the video's FPS and read all frames")
     ("draw", po::value<bool>(&draw_display)->default_value(true), "Draw video on screen.")
     ("numFaces", po::value<unsigned int>(&num_faces)->default_value(1), "Number of faces to be tracked.")
-    ("sync", po::bool_switch(&sync)->default_value(false), "Process frames synchronously.")
     ("loop", po::bool_switch(&loop)->default_value(false), "Loop over the video being processed.")
     ("face_id", po::bool_switch(&draw_id)->default_value(false), "Draw face id on screen. Note: Drawing to screen should be enabled.")
     ("quiet,q", po::bool_switch(&disable_logging)->default_value(false), "Disable logging to console")
@@ -170,15 +166,6 @@ int main(int argsc, char ** argsv) {
         return 1;
     }
 
-    // if processing frame rate not specified, default to sampling frame rate
-    if (processing_frame_rate ==0) {
-        processing_frame_rate = sampling_frame_rate;
-    }
-
-    if (sampling_frame_rate > processing_frame_rate) {
-        std::cerr << "Warning: sampling frame rate (" << sampling_frame_rate << ") should be <= processing frame rate ("  << processing_frame_rate << ") to avoid dropped frames\n";
-    }
-
     // check the data directory
     if (!boost::filesystem::exists(data_dir)) {
         std::cerr << "Data directory doesn't exist: " << std::string(data_dir.begin(), data_dir.end()) << std::endl;
@@ -192,7 +179,7 @@ int main(int argsc, char ** argsv) {
         return 1;
     }
 
-    unique_ptr<vision::Detector> detector;
+    unique_ptr<vision::SyncFrameDetector> detector;
     try {
         //initialize the output file
         boost::filesystem::path csv_path(video_path);
@@ -204,20 +191,8 @@ int main(int argsc, char ** argsv) {
             return 1;
         }
 
-        // if the sampling rate and the requested processing rate are the same, bump the processing rate
-        // by one to overcome potential rounding issues when comparing inter-frame timestamp differences
-        // against the processing rate
-        if (sampling_frame_rate == processing_frame_rate)
-            processing_frame_rate++;
-
-
         // create the FrameDetector
-        if (sync) {
-            detector = std::unique_ptr<vision::Detector>(new vision::SyncFrameDetector(data_dir, processing_frame_rate, num_faces));
-        }
-        else {
-            detector = std::unique_ptr<vision::Detector>(new vision::FrameDetector(data_dir, processing_frame_rate, num_faces));
-        }
+        detector = std::unique_ptr<vision::SyncFrameDetector>(new vision::SyncFrameDetector(data_dir, num_faces));
 
         // configure the FrameDetector by enabling features
         detector->enable({ vision::Feature::EMOTIONS, vision::Feature::EXPRESSIONS });
@@ -242,24 +217,7 @@ int main(int argsc, char ** argsv) {
             while (video_reader.GetFrame(mat, timestamp_ms)) {
                 // create a Frame from the video input and process it with the FrameDetector
                 vision::Frame f(mat.size().width, mat.size().height, mat.data, vision::Frame::ColorFormat::BGR, timestamp_ms);
-                if (sync) {
-                    dynamic_cast<vision::SyncFrameDetector *>(detector.get())->process(f);
-                }
-                else {
-                    dynamic_cast<vision::FrameDetector *>(detector.get())->process(f);
-                }
-
-                // Since a FrameDetector processes frames asynchronously, and video decoding frame rates are typically
-                // faster than FrameDetector processing frame rates, some intervention is needed if we want to avoid
-                // sending frames to the FrameDetector much faster than it can process them, resulting in a lot of dropped
-                // frames.  So, if the video sampling frame rate <= the processing frame rate, we infer
-                // that the intention is to process all frames, which we can ensure by waiting for each frame to be processed
-                // before sending to the next one.
-
-                if (!sync && sampling_frame_rate <= processing_frame_rate) {
-                    image_listener.waitForResult();
-                }
-
+                detector->process(f);
                 image_listener.processResults();
             }
 
