@@ -75,11 +75,6 @@ public:
         return dpoint;
     }
 
-    void waitForResult() {
-        std::unique_lock< std::mutex > lock(result_mtx);
-        result_received.wait(lock, [&] { return getDataSize() > 0; });
-    }
-
     void onImageResults(std::map<vision::FaceId, vision::Face> faces, vision::Frame image) override {
         std::lock_guard<std::mutex> lg(mtx);
         results.emplace_back(image, faces);
@@ -91,9 +86,6 @@ public:
         {
             frames_with_faces++;
         }
-
-        std::unique_lock< std::mutex > lock(result_mtx);
-        result_received.notify_one();
     };
 
     void onImageCapture(vision::Frame image) override {
@@ -209,8 +201,6 @@ public:
 private:
     bool draw_display;
     std::mutex mtx;
-    std::mutex result_mtx;
-    std::condition_variable result_received;
     std::deque<std::pair<vision::Frame, std::map<vision::FaceId, vision::Face> > > results;
 
     timestamp capture_last_ts;

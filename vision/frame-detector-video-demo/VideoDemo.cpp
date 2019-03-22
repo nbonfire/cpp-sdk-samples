@@ -23,7 +23,7 @@ public:
         if (sampling_frame_rate < 0)
             throw runtime_error("Specified sampling rate is < 0");
 
-        last_timestamp_ms = sampling_frame_rate == 0 ? -1 : (0 - 1 / sampling_frame_rate); // Initialize it so we still get timestamp 0 with sampling
+        last_timestamp_ms = sampling_frame_rate == 0 ? -1 : (0 - 1000 / sampling_frame_rate); // Initialize so that with sampling, we always process the first frame.
 
 
         std::set<boost::filesystem::path> SUPPORTED_EXTS = {
