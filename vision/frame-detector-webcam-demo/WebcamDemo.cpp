@@ -19,7 +19,7 @@ using namespace affdex;
 int main(int argsc, char ** argsv) {
     namespace po = boost::program_options; // abbreviate namespace
 
-    std::cerr << "Hit ESCAPE key to exit app.." << endl;
+    std::cout << "Hit ESCAPE key to exit app.." << endl;
 
     try {
 
@@ -49,7 +49,7 @@ int main(int argsc, char ** argsv) {
 #else //  _WIN32
             ("data,d", po::value< affdex::path >(&data_dir)->default_value(affdex::path("data"), std::string("data")), "Path to the data folder")
 #endif // _WIN32
-            ("resolution,r", po::value< std::vector<int> >(&resolution)->default_value(DEFAULT_RESOLUTION, "640 480")->multitoken(), "Resolution in pixels (2-values): width height")
+            ("resolution,r", po::value< std::vector<int> >(&resolution)->default_value(DEFAULT_RESOLUTION, "1280 720")->multitoken(), "Resolution in pixels (2-values): width height")
             ("pfps", po::value< int >(&process_framerate)->default_value(30), "Processing framerate.")
             ("cfps", po::value< int >(&camera_framerate)->default_value(30), "Camera capture framerate.")
             ("cid", po::value< int >(&camera_id)->default_value(0), "Camera ID.")
@@ -121,6 +121,8 @@ int main(int argsc, char ** argsv) {
 
         // Connect to the webcam and configure it
         cv::VideoCapture webcam(camera_id);
+
+        // Note: not all webcams support these configuration properties
         webcam.set(CV_CAP_PROP_FPS, camera_framerate);
         webcam.set(CV_CAP_PROP_FRAME_WIDTH, resolution[0]);
         webcam.set(CV_CAP_PROP_FRAME_HEIGHT, resolution[1]);

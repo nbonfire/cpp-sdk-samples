@@ -61,11 +61,11 @@ public:
 private:
 
     /**
-    * Overlay an image with an Alpha (foreground) channel over background
-    * Assumes foreground.size() == background.size()
+    * Overlay an image with an Alpha (foreground) channel over background at a specified location
     * Adapted from : http://jepsonsblog.blogspot.com/2012/10/overlay-transparent-image-in-opencv.html
     * @param foreground - image to overlay
-    * @param background - ROI to overlay on
+    * @param background - background image
+    * @param location   - location on the background image where the foreground image should be placed
     */
     void overlayImage(const cv::Mat &foreground, cv::Mat &background, cv::Point2i location);
 

@@ -34,19 +34,6 @@ public:
             boost::filesystem::path(".webm"),
             boost::filesystem::path(".wmv"),
             boost::filesystem::path(".mp4"),
-
-            // Supported image formats
-            // check https://docs.opencv.org/2.4/modules/highgui/doc/reading_and_writing_images_and_video.html#imread
-            boost::filesystem::path(".bmp"),
-            boost::filesystem::path(".jpeg"),
-            boost::filesystem::path(".jpg"),
-            boost::filesystem::path(".png"),
-            boost::filesystem::path(".pbm"),
-            boost::filesystem::path(".pgm"),
-            boost::filesystem::path(".sr"),
-            boost::filesystem::path(".ras"),
-            boost::filesystem::path(".tiff"),
-            boost::filesystem::path(".tif")
         };
 
         boost::filesystem::path ext = file_path.extension();
