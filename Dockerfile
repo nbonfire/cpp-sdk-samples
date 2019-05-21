@@ -6,7 +6,7 @@
 # the result will be an image that has the tar'ed artifact of the sample app and all of its dependencies installed
 #
 # run this container interactively:
-# $ docker run -it --rm v1.2.0:affectiva-auto
+# $ docker run -it --rm affectiva-auto:v1.2.0
 #
 # running the webcam or mic demos interactively requires some privileges, devices, and access to the X11 socket:
 # $ docker run -it --privileged --rm --net=host \
@@ -15,7 +15,7 @@
 #        -e DISPLAY=$DISPLAY     \
 #        --device=/dev/video0 \
 #        --device=/dev/snd \
-#        v1.2.0:affectiva-auto
+#        affectiva-auto:v1.2.0
 # Then from the shell, run the following for the webcam demo:
 # $ /opt/testapp-artifact/build/vision/bin/frame-detector-webcam-demo -d $AUTO_SDK_DIR/data/vision
 # or for the mic demo:
