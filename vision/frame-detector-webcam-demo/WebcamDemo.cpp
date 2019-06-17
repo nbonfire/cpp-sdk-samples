@@ -24,6 +24,7 @@ int main(int argsc, char ** argsv) {
     try {
 
         const std::vector<int> DEFAULT_RESOLUTION {1280, 720};
+        std::string data_path_str= "AFFECTIVA_VISION_DATA_DIR";
 
         // cmd line options
         affdex::path data_dir;
@@ -47,7 +48,8 @@ int main(int argsc, char ** argsv) {
 #ifdef _WIN32
             ("data,d", po::wvalue< affdex::path >(&data_dir)->default_value(affdex::path(L"data"), std::string("data")), "Path to the data folder")
 #else //  _WIN32
-            ("data,d", po::value< affdex::path >(&data_dir)->default_value(affdex::path("data"), std::string("data")), "Path to the data folder")
+            ("data,d", po::value< affdex::path >(&data_dir)->default_value(affdex::path("data"), std::string("data")),
+            (std::string("Path to the data folder. Alternatively, this cli arg becomes optional if you set the environment variable ") + data_path_str + "=/path/to/data").c_str())
 #endif // _WIN32
             ("resolution,r", po::value< std::vector<int> >(&resolution)->default_value(DEFAULT_RESOLUTION, "1280 720")->multitoken(), "Resolution in pixels (2-values): width height")
             ("pfps", po::value< int >(&process_framerate)->default_value(30), "Processing framerate.")
@@ -76,9 +78,17 @@ int main(int argsc, char ** argsv) {
         }
 
         if (!boost::filesystem::exists(data_dir)) {
-            std::cerr << "Data directory doesn't exist: " << std::string(data_dir.begin(), data_dir.end()) << std::endl << std::endl;;
+            std::cerr << "Data directory doesn't exist: " << std::string(data_dir.begin(), data_dir.end()) << std::endl;
+            std::cerr << "Checking if env variable " << data_path_str << " is set" << std::endl;
+            if (char* vision_env = std::getenv(data_path_str.c_str())) {
+              data_dir = affdex::path(vision_env);
+              std::cout << "From env variable " << data_path_str << ", using data dir=" << data_dir << std::endl;
+            }
+            else {
+            std::cerr << "env variable " << data_path_str << " doesn't exist. " << std::endl;
             std::cerr << description << std::endl;
             return 1;
+            }
         }
 
         if (resolution.size() != 2) {
@@ -165,7 +175,7 @@ int main(int argsc, char ** argsv) {
         frame_detector->stop();
     }
     catch (...) {
-        std::cerr << "Encountered an exception ";
+        std::cerr << "Encountered an exception " << std::endl;
         return 1;
     }
 

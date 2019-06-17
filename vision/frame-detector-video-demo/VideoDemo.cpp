@@ -103,6 +103,7 @@ private:
 int main(int argsc, char ** argsv) {
 
     const int precision = 2;
+    std::string data_path_str= "AFFECTIVA_VISION_DATA_DIR";
     std::cerr << std::fixed << std::setprecision(precision);
     std::cout << std::fixed << std::setprecision(precision);
 
@@ -125,7 +126,8 @@ int main(int argsc, char ** argsv) {
     ("data,d", po::wvalue<affdex::path>(&data_dir)->default_value(affdex::path(L"data"), std::string("data")), "Path to the data folder")
     ("input,i", po::wvalue<affdex::path>(&video_path)->required(), "Video file to processs")
 #else // _WIN32
-    ("data,d", po::value< affdex::path >(&data_dir)->default_value(affdex::path("data"), std::string("data")), "Path to the data folder")
+    ("data,d", po::value< affdex::path >(&data_dir)->default_value(affdex::path("data"), std::string("data")),
+    (std::string("Path to the data folder. Alternatively, this cli arg becomes optional if you set the environment variable ") + data_path_str + "=/path/to/data").c_str())
     ("input,i", po::value< affdex::path >(&video_path)->required(), "Video file to processs")
 #endif // _WIN32
     ("sfps", po::value<unsigned int>(&sampling_frame_rate)->default_value(0), "Input sampling frame rate. Default is 0, which means the app will respect the video's FPS and read all frames")
@@ -156,8 +158,16 @@ int main(int argsc, char ** argsv) {
     // check the data directory
     if (!boost::filesystem::exists(data_dir)) {
         std::cerr << "Data directory doesn't exist: " << std::string(data_dir.begin(), data_dir.end()) << std::endl;
+        std::cerr << "Checking if env variable " << data_path_str << " is set" << std::endl;
+        if (char* vision_env = std::getenv(data_path_str.c_str())) {
+          data_dir = affdex::path(vision_env);
+          std::cout << "From env variable " << data_path_str << ", using data dir=" << data_dir << std::endl;
+        }
+        else {
+        std::cerr << "env variable " << data_path_str << " doesn't exist. " << std::endl;
         std::cerr << description << std::endl;
         return 1;
+        }
     }
 
     if (draw_id && !draw_display) {
