@@ -13,6 +13,8 @@
 #include <iostream>
 #include <iomanip>
 
+static const std::string DATA_DIR_ENV_VAR="AFFECTIVA_VISION_DATA_DIR";
+
 using namespace std;
 using namespace affdex;
 
@@ -24,7 +26,7 @@ int main(int argsc, char ** argsv) {
     try {
 
         const std::vector<int> DEFAULT_RESOLUTION {1280, 720};
-        std::string data_path_str= "AFFECTIVA_VISION_DATA_DIR";
+        std::string DATA_DIR_ENV_VAR= "AFFECTIVA_VISION_DATA_DIR";
 
         // cmd line options
         affdex::path data_dir;
@@ -48,8 +50,8 @@ int main(int argsc, char ** argsv) {
 #ifdef _WIN32
             ("data,d", po::wvalue< affdex::path >(&data_dir)->default_value(affdex::path(L"data"), std::string("data")), "Path to the data folder")
 #else //  _WIN32
-            ("data,d", po::value< affdex::path >(&data_dir)->default_value(affdex::path("data"), std::string("data")),
-            (std::string("Path to the data folder. Alternatively, this cli arg becomes optional if you set the environment variable ") + data_path_str + "=/path/to/data").c_str())
+            ("data,d", po::value< affdex::path >(&data_dir)->default_value(affdex::path(""), std::string("data")),
+            (std::string("Path to the data folder. Alternatively, this cli arg becomes optional if you set the environment variable ") + DATA_DIR_ENV_VAR + "=/path/to/data").c_str())
 #endif // _WIN32
             ("resolution,r", po::value< std::vector<int> >(&resolution)->default_value(DEFAULT_RESOLUTION, "1280 720")->multitoken(), "Resolution in pixels (2-values): width height")
             ("pfps", po::value< int >(&process_framerate)->default_value(30), "Processing framerate.")
@@ -77,18 +79,23 @@ int main(int argsc, char ** argsv) {
             return 1;
         }
 
-        if (!boost::filesystem::exists(data_dir)) {
-            std::cerr << "Data directory doesn't exist: " << std::string(data_dir.begin(), data_dir.end()) << std::endl;
-            std::cerr << "Checking if env variable " << data_path_str << " is set" << std::endl;
-            if (char* vision_env = std::getenv(data_path_str.c_str())) {
-              data_dir = affdex::path(vision_env);
-              std::cout << "From env variable " << data_path_str << ", using data dir=" << data_dir << std::endl;
-            }
-            else {
-            std::cerr << "env variable " << data_path_str << " doesn't exist. " << std::endl;
+        // set data_dir to env_var if not set on cmd line
+        char* vision_env = std::getenv(DATA_DIR_ENV_VAR.c_str());
+        if (data_dir.empty() && vision_env != NULL) {
+            data_dir = affdex::path(vision_env);
+            std::cout << "Using value " << data_dir << " from env var " << DATA_DIR_ENV_VAR << std::endl;
+        }
+
+        if (data_dir.empty() ) {
+            std::cerr << "Data directory not specified via command line or env var." << std::endl;
             std::cerr << description << std::endl;
             return 1;
-            }
+        }
+
+        if (!boost::filesystem::exists(data_dir)) {
+            std::cerr << "Data directory doesn't exist: " << std::string(data_dir.begin(), data_dir.end()) << std::endl;
+            std::cerr << description << std::endl;
+            return 1;
         }
 
         if (resolution.size() != 2) {
