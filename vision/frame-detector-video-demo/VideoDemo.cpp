@@ -12,7 +12,10 @@
 #include <iostream>
 #include <iomanip>
 
-static const std::string DATA_DIR_ENV_VAR="AFFECTIVA_VISION_DATA_DIR";
+static const std::string DATA_DIR_ENV_VAR = "AFFECTIVA_VISION_DATA_DIR";
+#ifdef _WIN32
+static const std::wstring WIDE_DATA_DIR_ENV_VAR=L"AFFECTIVA_VISION_DATA_DIR";
+#endif
 
 using namespace std;
 using namespace affdex;
@@ -122,23 +125,25 @@ int main(int argsc, char ** argsv) {
 
     po::options_description description("Project for demoing the Affectiva FrameDetector class (processing video files).");
     description.add_options()
-    ("help,h", po::bool_switch()->default_value(false), "Display this help message.")
+        ("help,h", po::bool_switch()->default_value(false), "Display this help message.")
 #ifdef _WIN32
-    ("data,d", po::wvalue<affdex::path>(&data_dir)->default_value(affdex::path(L"data"), std::string("data")), "Path to the data folder")
-    ("input,i", po::wvalue<affdex::path>(&video_path)->required(), "Video file to processs")
+        ("data,d", po::wvalue<affdex::path>(&data_dir),
+            std::string("Path to the data folder. Alternatively, specify the path via the environment variable "
+                + DATA_DIR_ENV_VAR + R"(=\path\to\data)").c_str())
+        ("input,i", po::wvalue<affdex::path>(&video_path)->required(), "Video file to processs")
 #else // _WIN32
-    ("data,d", po::value< affdex::path >(&data_dir)->default_value(affdex::path(""), std::string("data")),
-    (std::string("Path to the data folder. Alternatively, this cli arg becomes optional if you set the environment variable ") + DATA_DIR_ENV_VAR + "=/path/to/data").c_str())
-    ("input,i", po::value< affdex::path >(&video_path)->required(), "Video file to processs")
+        ("data,d", po::value< affdex::path >(&data_dir),
+            (std::string("Path to the data folder. Alternatively, specify the path via the environment variable ")
+            + DATA_DIR_ENV_VAR + "=/path/to/data").c_str())
+        ("input,i", po::value< affdex::path >(&video_path)->required(), "Video file to processs")
 #endif // _WIN32
-    ("sfps", po::value<unsigned int>(&sampling_frame_rate)->default_value(0), "Input sampling frame rate. Default is 0, which means the app will respect the video's FPS and read all frames")
-    ("draw", po::value<bool>(&draw_display)->default_value(true), "Draw video on screen.")
-    ("numFaces", po::value<unsigned int>(&num_faces)->default_value(1), "Number of faces to be tracked.")
-    ("loop", po::bool_switch(&loop)->default_value(false), "Loop over the video being processed.")
-    ("face_id", po::bool_switch(&draw_id)->default_value(false), "Draw face id on screen. Note: Drawing to screen should be enabled.")
-    ("quiet,q", po::bool_switch(&disable_logging)->default_value(false), "Disable logging to console")
-
-    ;
+        ("sfps", po::value<unsigned int>(&sampling_frame_rate)->default_value(0), "Input sampling frame rate. Default is 0, which means the app will respect the video's FPS and read all frames")
+        ("draw", po::value<bool>(&draw_display)->default_value(true), "Draw video on screen.")
+        ("numFaces", po::value<unsigned int>(&num_faces)->default_value(1), "Number of faces to be tracked.")
+        ("loop", po::bool_switch(&loop)->default_value(false), "Loop over the video being processed.")
+        ("face_id", po::bool_switch(&draw_id)->default_value(false), "Draw face id on screen. Note: Drawing to screen should be enabled.")
+        ("quiet,q", po::bool_switch(&disable_logging)->default_value(false), "Disable logging to console")
+        ;
 
     po::variables_map args;
 
@@ -157,10 +162,15 @@ int main(int argsc, char ** argsv) {
     }
 
     // set data_dir to env_var if not set on cmd line
+#ifdef _WIN32
+    wchar_t* vision_env = _wgetenv(WIDE_DATA_DIR_ENV_VAR.c_str());
+#else
     char* vision_env = std::getenv(DATA_DIR_ENV_VAR.c_str());
-    if (data_dir.empty() && vision_env != NULL) {
+#endif
+    if (data_dir.empty() && vision_env != nullptr) {
         data_dir = affdex::path(vision_env);
-        std::cout << "Using value " << data_dir << " from env var " << DATA_DIR_ENV_VAR << std::endl;
+        std::cout << "Using value " << std::string(data_dir.begin(), data_dir.end()) << " from env var "
+            << DATA_DIR_ENV_VAR << std::endl;
     }
 
     if (data_dir.empty() ) {

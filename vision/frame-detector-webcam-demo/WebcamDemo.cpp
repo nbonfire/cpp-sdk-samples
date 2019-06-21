@@ -13,7 +13,10 @@
 #include <iostream>
 #include <iomanip>
 
-static const std::string DATA_DIR_ENV_VAR="AFFECTIVA_VISION_DATA_DIR";
+static const std::string DATA_DIR_ENV_VAR = "AFFECTIVA_VISION_DATA_DIR";
+#ifdef _WIN32
+static const std::wstring WIDE_DATA_DIR_ENV_VAR = L"AFFECTIVA_VISION_DATA_DIR";
+#endif
 
 using namespace std;
 using namespace affdex;
@@ -48,10 +51,13 @@ int main(int argsc, char ** argsv) {
         description.add_options()
             ("help,h", po::bool_switch()->default_value(false), "Display this help message.")
 #ifdef _WIN32
-            ("data,d", po::wvalue< affdex::path >(&data_dir)->default_value(affdex::path(L"data"), std::string("data")), "Path to the data folder")
+            ("data,d", po::wvalue<affdex::path>(&data_dir),
+                std::string("Path to the data folder. Alternatively, specify the path via the environment variable "
+                    + DATA_DIR_ENV_VAR + R"(=\path\to\data)").c_str())
 #else //  _WIN32
-            ("data,d", po::value< affdex::path >(&data_dir)->default_value(affdex::path(""), std::string("data")),
-            (std::string("Path to the data folder. Alternatively, this cli arg becomes optional if you set the environment variable ") + DATA_DIR_ENV_VAR + "=/path/to/data").c_str())
+            ("data,d", po::value< affdex::path >(&data_dir),
+                (std::string("Path to the data folder. Alternatively, specify the path via the environment variable ")
+                + DATA_DIR_ENV_VAR + "=/path/to/data").c_str())
 #endif // _WIN32
             ("resolution,r", po::value< std::vector<int> >(&resolution)->default_value(DEFAULT_RESOLUTION, "1280 720")->multitoken(), "Resolution in pixels (2-values): width height")
             ("pfps", po::value< int >(&process_framerate)->default_value(30), "Processing framerate.")
@@ -62,7 +68,8 @@ int main(int argsc, char ** argsv) {
             ("sync", po::bool_switch(&sync)->default_value(false), "Process frames synchronously. Note this will process all frames captured by the camera and will ignore the value in --pfps")
             ("quiet,q", po::bool_switch(&disable_logging)->default_value(false), "Disable logging to console")
             ("face_id", po::value< bool >(&draw_id)->default_value(true), "Draw face id on screen. Note: Drawing to screen must be enabled.")
-        ;
+            ;
+
         po::variables_map args;
         try {
             po::store(po::command_line_parser(argsc, argsv).options(description).run(), args);
@@ -80,10 +87,15 @@ int main(int argsc, char ** argsv) {
         }
 
         // set data_dir to env_var if not set on cmd line
+#ifdef _WIN32
+        wchar_t* vision_env = _wgetenv(WIDE_DATA_DIR_ENV_VAR.c_str());
+#else
         char* vision_env = std::getenv(DATA_DIR_ENV_VAR.c_str());
-        if (data_dir.empty() && vision_env != NULL) {
+#endif
+        if (data_dir.empty() && vision_env != nullptr) {
             data_dir = affdex::path(vision_env);
-            std::cout << "Using value " << data_dir << " from env var " << DATA_DIR_ENV_VAR << std::endl;
+            std::cout << "Using value " << std::string(data_dir.begin(), data_dir.end()) << " from env var "
+                << DATA_DIR_ENV_VAR << std::endl;
         }
 
         if (data_dir.empty() ) {
@@ -97,7 +109,7 @@ int main(int argsc, char ** argsv) {
             std::cerr << description << std::endl;
             return 1;
         }
-
+    
         if (resolution.size() != 2) {
             std::cerr << "Only two numbers must be specified for resolution." << std::endl;
             return 1;
