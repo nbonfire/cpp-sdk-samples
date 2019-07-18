@@ -51,7 +51,7 @@ $ sudo ./b2 -j $(nproc) cxxflags=-fPIC threading=multi runtime-link=shared \
 Ubuntu:
 `$ sudo apt-get install -y build-essential libopencv-dev cmake libgtk2.0-dev pkg-config libjpeg-dev libpng-dev libtiff-dev libjasper-dev libavformat-dev libavcodec-dev libswscale-dev`
 
-##Ubuntu 18 
+## Ubuntu 18    
 We do not recommend running the sample apps with opencv 3.2.0 from the package manager. Instead, you will have to build opencv 2.4.13 from source. Other opencv versions 2.4.** may work but we recommend 2.4.13 as a tested depedency for the sample apps on Ubuntu 18 with compiler version gcc7. 
 
 **NOTE: These instructions assume you are using compiler version gcc7. This is the default compiler verision on Ubuntu 18.**
