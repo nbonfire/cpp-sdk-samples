@@ -150,13 +150,13 @@ public:
 
             std::map<vision::FacePoint, vision::Point> points = f.getFacePoints();
 
-            // Draw Facial Landmarks Points
-            viz.drawPoints(f.getFacePoints());
-
             // Draw bounding box
             auto bbox = f.getBoundingBox();
             const float valence = f.getEmotions().at(vision::Emotion::VALENCE);
             viz.drawBoundingBox(bbox, valence);
+
+            // Draw Facial Landmarks Points
+            viz.drawPoints(f.getFacePoints());
 
             // Draw a face on screen
             viz.drawFaceMetrics(f, bbox, draw_face_id);
