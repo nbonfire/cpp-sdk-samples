@@ -1,7 +1,7 @@
 # Sample apps for analyzing facial emotion using Affectiva's Automotive SDK for Linux
 ### frame-detector-webcam-demo
 
-This sample demonstrates use of the [FrameDetector class](https://auto.affectiva.com/docs/vision-create-detector), getting its input from a webcam. It analyzes received frames and displays the results on screen.
+This sample demonstrates use of the SyncFrameDetector class, getting its input from a webcam. It analyzes received frames and displays the results on screen.
 
 After building, run the command `./frame-detector-webcam-demo --help` for information on its command line options.
 
@@ -9,7 +9,7 @@ After building, run the command `./frame-detector-webcam-demo --help` for inform
 
 ### frame-detector-video-demo
 
-This sample demonstrates use of the [FrameDetector class](https://auto.affectiva.com/docs/vision-create-detector), getting its input from a video file. It analyzes received frames and displays the results on screen.
+This sample demonstrates use of the SyncFrameDetector class, getting its input from a video file. It analyzes received frames and displays the results on screen.
 
 After building, run the command `./frame-detector-video-demo --help` for information on its command line options.
 
@@ -24,12 +24,11 @@ The Vision Library is packaged with the Automotive SDK, which is available upon 
 #### Additional Dependencies
 
 Install additional dependencies with the following command:  
-Ubuntu:`$ sudo apt install -y git pip build-essential libopencv-dev cmake libgtk2.0-dev pkg-config libjpeg-dev libpng-dev libtiff-dev libavformat-dev libavcodec-dev libswscale-dev`  
-Ubuntu: `$ pip install numpy`
+Ubuntu:`$ sudo apt install -y wget git build-essential libopencv-dev cmake libgtk2.0-dev pkg-config libjpeg-dev libpng-dev libtiff-dev libavformat-dev libavcodec-dev libswscale-dev`  
 
 [Click here](#ubuntu-18) for instructions on building sample apps for Ubuntu 18.
 
-[Click here](#ubuntu-16) for instruction on building sample apps for Ubuntu 16. 
+[Click here](#ubuntu-16) for instruction on building sample apps for Ubuntu 16.
 
 ## Ubuntu 18  
 
@@ -72,20 +71,20 @@ mkdir build install
 cd build
 
 CMAKE_ARGS="-DWITH_FFMPEG=ON \
--DBUILD_TESTS=OFF \ 
--DBUILD_PERF_TESTS=OFF \ 
--DCMAKE_BUILD_TYPE=RELEASE \ 
+-DBUILD_TESTS=OFF \
+-DBUILD_PERF_TESTS=OFF \
+-DCMAKE_BUILD_TYPE=RELEASE \
 -DENABLE_PRECOMPILED_HEADERS=OFF \
 -DCMAKE_INSTALL_PREFIX=/path/to/opencv/install"
 
 cmake $CMAKE_ARGS ../
-make -j4 
-make install 
+make -j4
+make install
 ```
 ----
 ### Building Samples with CMake
 
-Specify the the following CMake variables to identify the locations of various dependencies:
+Specify the following CMake variables to identify the locations of various dependencies:
 
 - **AFFECTIVA_SDK_DIR**: set path to the folder where the Automotive SDK is installed (`/path/to/auto-sdk`)
 - **BOOST_ROOT**: set path to the `/usr/` directory
@@ -105,18 +104,23 @@ CMAKE_ARGS="-DCMAKE_BUILD_TYPE=Release \
 -DOpenCV_DIR=/path/to/opencv/install/share/OpenCV \
 -DCMAKE_INSTALL_PREFIX=/path/to/cpp-sdk-samples/vision/vision-samples-install"
 
-cmake $CMAKE_ARGS /path/to/cpp-sdk-samples/vision 
+cmake $CMAKE_ARGS /path/to/cpp-sdk-samples/vision
 make -j4
 make install
 
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$AFFECTIVA_SDK_DIR/lib
+```
+Setup runtime configurations by running the `config.sh` bash script with the following commands:
+```
+$ export AFFECTIVA_SDK_DIR=/path/to/auto-sdk
+$ ../config.sh
+
 ```
 
 ---
 
 ## Ubuntu 16
 
-### Boost 
+### Boost
 ```
 $ mkdir boost-build
 $ cd boost-build
@@ -156,7 +160,7 @@ CMAKE_ARGS="-DCMAKE_BUILD_TYPE=Release \
 -DOpenCV_DIR=/usr/ \
 -DCMAKE_INSTALL_PREFIX=/path/to/cpp-sdk-samples/vision/vision-samples-install"
 
-cmake $CMAKE_ARGS /path/to/cpp-sdk-samples/vision 
+cmake $CMAKE_ARGS /path/to/cpp-sdk-samples/vision
 make -j4
 make install
 

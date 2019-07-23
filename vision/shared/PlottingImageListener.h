@@ -22,9 +22,9 @@ public:
     PlottingImageListener(std::ofstream &csv, bool draw_display, bool enable_logging, bool draw_face_id) :
         draw_display(draw_display),
         capture_last_ts(0),
-        capture_fps(-1),
+        capture_fps(0),
         process_last_ts(0),
-        process_fps(-1),
+        process_fps(0),
         out_stream(csv),
         start(std::chrono::system_clock::now()),
         processed_frames(0),
@@ -189,9 +189,9 @@ public:
     void reset() {
         std::lock_guard<std::mutex> lg(mtx);
         capture_last_ts = 0;
-        capture_fps = unsigned(-1.0);
+        capture_fps = 0;
         process_last_ts = 0;
-        process_fps = unsigned(-1.0);
+        process_fps = 0;
         start = std::chrono::system_clock::now();
         processed_frames = 0;
         frames_with_faces = 0;
