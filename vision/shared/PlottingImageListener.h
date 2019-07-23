@@ -189,9 +189,9 @@ public:
     void reset() {
         std::lock_guard<std::mutex> lg(mtx);
         capture_last_ts = 0;
-        capture_fps = -1.0f;
+        capture_fps = unsigned(-1.0);
         process_last_ts = 0;
-        process_fps = -1.0f;
+        process_fps = unsigned(-1.0);
         start = std::chrono::system_clock::now();
         processed_frames = 0;
         frames_with_faces = 0;
