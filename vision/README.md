@@ -1,5 +1,5 @@
 # Sample apps for analyzing facial emotion using Affectiva's Automotive SDK for Linux
-###frame-detector-webcam-demo
+### frame-detector-webcam-demo
 
 This sample demonstrates use of the [FrameDetector class](https://auto.affectiva.com/docs/vision-create-detector), getting its input from a webcam. It analyzes received frames and displays the results on screen.
 
@@ -7,7 +7,7 @@ After building, run the command `./frame-detector-webcam-demo --help` for inform
 
 ---
 
-###frame-detector-video-demo
+### frame-detector-video-demo
 
 This sample demonstrates use of the [FrameDetector class](https://auto.affectiva.com/docs/vision-create-detector), getting its input from a video file. It analyzes received frames and displays the results on screen.
 
@@ -24,7 +24,8 @@ The Vision Library is packaged with the Automotive SDK, which is available upon 
 #### Additional Dependencies
 
 Install additional dependencies with the following command:  
-Ubuntu:`$ sudo apt-get install -y build-essential libopencv-dev cmake libgtk2.0-dev pkg-config libjpeg-dev libpng-dev libtiff-dev libavformat-dev libavcodec-dev libswscale-dev`
+Ubuntu:`$ sudo apt install -y git pip build-essential libopencv-dev cmake libgtk2.0-dev pkg-config libjpeg-dev libpng-dev libtiff-dev libavformat-dev libavcodec-dev libswscale-dev`  
+Ubuntu: `$ pip install numpy`
 
 [Click here](#ubuntu-18) for instructions on building sample apps for Ubuntu 18.
 
@@ -35,7 +36,7 @@ Ubuntu:`$ sudo apt-get install -y build-essential libopencv-dev cmake libgtk2.0-
 ### Boost
 Install boost directly from the package manager with the following command:   
 
-Ubuntu: `$ sudo apt-get install -y libboost-dev libboost-filesystem1.65-dev libboost-program-options1.65-dev libboost-system1.65-dev`
+Ubuntu: `$ sudo apt install -y libboost-dev libboost-filesystem1.65-dev libboost-program-options1.65-dev libboost-system1.65-dev`
 
 ### OpenCV  
 We do not recommend running the sample apps with OpenCV 3.2.0 from the package manager. Instead, you must build opencv 2.4.13 from source. Other OpenCV versions 2.4.** may work but we recommend 2.4.13 as a tested depedency for the sample apps on Ubuntu 18.
@@ -130,7 +131,7 @@ $ sudo ./b2 -j $(nproc) cxxflags=-fPIC threading=multi runtime-link=shared \
 ### OpenCV
 Install OpenCV directly from the package manager with the following command:
 
-`$ sudo apt-get install -y libopencv-dev`
+`$ sudo apt install -y libopencv-dev`
 
 ### Building with CMake
 
@@ -152,7 +153,7 @@ cd vision-samples-build
 CMAKE_ARGS="-DCMAKE_BUILD_TYPE=Release \
 -DAFFECTIVA_SDK_DIR=/path/to/auto-sdk \
 -DBOOST_ROOT=/path/to/boost-build \
--DOpenCV_DIR=/usr \
+-DOpenCV_DIR=/usr/ \
 -DCMAKE_INSTALL_PREFIX=/path/to/cpp-sdk-samples/vision/vision-samples-install"
 
 cmake $CMAKE_ARGS /path/to/cpp-sdk-samples/vision 
