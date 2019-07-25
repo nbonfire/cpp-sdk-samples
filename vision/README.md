@@ -24,8 +24,7 @@ The Vision Library is packaged with the Automotive SDK, which is available upon 
 #### Additional Dependencies
 
 Install additional dependencies with the following command:  
-Ubuntu:`$ sudo apt install -y wget git pip build-essential libopencv-dev cmake libgtk2.0-dev pkg-config libjpeg-dev libpng-dev libtiff-dev libavformat-dev libavcodec-dev libswscale-dev`  
-Ubuntu: `$ pip install numpy`
+Ubuntu:`$ sudo apt install -y wget git build-essential libopencv-dev cmake libgtk2.0-dev pkg-config libjpeg-dev libpng-dev libtiff-dev libavformat-dev libavcodec-dev libswscale-dev`  
 
 [Click here](#ubuntu-18) for instructions on building sample apps for Ubuntu 18.
 
@@ -110,9 +109,9 @@ make -j4
 make install
 
 ```
-
-Setup runtime configurations by running the `config.sh` bash script with the following command:
+Setup runtime configurations by running the `config.sh` bash script with the following commands:
 ```
+$ export AFFECTIVA_SDK_DIR=/path/to/auto-sdk
 $ ../config.sh
 
 ```
