@@ -174,7 +174,7 @@ int main(int argsc, char ** argsv) {
     }
 
     if (data_dir.empty() ) {
-        std::cerr << "Data directory not specified via command line or env var." << std::endl;
+        std::cerr << "Data directory not specified via command line or env var: " << DATA_DIR_ENV_VAR << std::endl;
         std::cerr << description << std::endl;
         return 1;
     }

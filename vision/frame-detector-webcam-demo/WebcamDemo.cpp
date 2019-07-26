@@ -33,6 +33,7 @@ int main(int argsc, char ** argsv) {
 
         // cmd line options
         affdex::path data_dir;
+        affdex::path output_file_path;
         std::vector<int> resolution;
         int process_framerate;
         int camera_framerate;
@@ -68,6 +69,7 @@ int main(int argsc, char ** argsv) {
             ("sync", po::bool_switch(&sync)->default_value(false), "Process frames synchronously. Note this will process all frames captured by the camera and will ignore the value in --pfps")
             ("quiet,q", po::bool_switch(&disable_logging)->default_value(false), "Disable logging to console")
             ("face_id", po::value< bool >(&draw_id)->default_value(true), "Draw face id on screen. Note: Drawing to screen must be enabled.")
+            ("file,f", po::value< affdex::path >(&output_file_path), "Name of the output CSV file.")
             ;
 
         po::variables_map args;
@@ -99,7 +101,7 @@ int main(int argsc, char ** argsv) {
         }
 
         if (data_dir.empty() ) {
-            std::cerr << "Data directory not specified via command line or env var." << std::endl;
+            std::cerr << "Data directory not specified via command line or env var: " << DATA_DIR_ENV_VAR << std::endl;
             std::cerr << description << std::endl;
             return 1;
         }
@@ -109,7 +111,7 @@ int main(int argsc, char ** argsv) {
             std::cerr << description << std::endl;
             return 1;
         }
-    
+
         if (resolution.size() != 2) {
             std::cerr << "Only two numbers must be specified for resolution." << std::endl;
             return 1;
@@ -126,6 +128,16 @@ int main(int argsc, char ** argsv) {
             return 1;
         }
 
+        //initialize the output file
+        boost::filesystem::path csv_path(output_file_path);
+        csv_path.replace_extension(".csv");
+        std::ofstream csv_file_stream(csv_path.c_str());
+
+        if (!csv_file_stream.is_open()) {
+            std::cerr << "Unable to open csv file " << output_file_path << std::endl;
+            return 1;
+        }
+
         // create the FrameDetector
         unique_ptr<vision::Detector> frame_detector;
         if (sync) {
@@ -136,8 +148,8 @@ int main(int argsc, char ** argsv) {
         }
 
         // prepare listeners
-        std::ofstream csvFileStream;
-        PlottingImageListener image_listener(csvFileStream, draw_display, !disable_logging, draw_id);
+        //std::ofstream csvFileStream;
+        PlottingImageListener image_listener(csv_file_stream, draw_display, !disable_logging, draw_id);
         AFaceListener face_listener;
         StatusListener status_listener;
 
@@ -192,6 +204,11 @@ int main(int argsc, char ** argsv) {
         while (status_listener.isRunning() && (cv::waitKey(20) != 27)); // ascii for ESC
 #endif
         frame_detector->stop();
+        csv_file_stream.close();
+
+        if (boost::filesystem::exists(output_file_path) ) {
+            std::cout << "Output written to file" << output_file_path << std::endl;
+        }
     }
     catch (...) {
         std::cerr << "Encountered an exception " << std::endl;
