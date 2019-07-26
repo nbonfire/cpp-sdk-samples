@@ -1,7 +1,7 @@
 # Sample apps for analyzing facial emotion using Affectiva's Automotive SDK for Linux
 ### frame-detector-webcam-demo
 
-This sample demonstrates use of the [FrameDetector class](https://auto.affectiva.com/docs/vision-create-detector), getting its input from a webcam. It analyzes received frames and displays the results on screen.
+This sample demonstrates use of the SyncFrameDetector class, getting its input from a webcam. It analyzes received frames and displays the results on screen.
 
 After building, run the command `./frame-detector-webcam-demo --help` for information on its command line options.
 
@@ -9,7 +9,7 @@ After building, run the command `./frame-detector-webcam-demo --help` for inform
 
 ### frame-detector-video-demo
 
-This sample demonstrates use of the [FrameDetector class](https://auto.affectiva.com/docs/vision-create-detector), getting its input from a video file. It analyzes received frames and displays the results on screen.
+This sample demonstrates use of the SyncFrameDetector class, getting its input from a video file. It analyzes received frames and displays the results on screen.
 
 After building, run the command `./frame-detector-video-demo --help` for information on its command line options.
 
@@ -84,7 +84,7 @@ make install
 ----
 ### Building Samples with CMake
 
-Specify the the following CMake variables to identify the locations of various dependencies:
+Specify the following CMake variables to identify the locations of various dependencies:
 
 - **AFFECTIVA_SDK_DIR**: set path to the folder where the Automotive SDK is installed (`/path/to/auto-sdk`)
 - **BOOST_ROOT**: set path to the `/usr/` directory
