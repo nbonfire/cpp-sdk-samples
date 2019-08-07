@@ -28,7 +28,7 @@ Ubuntu:`$ sudo apt install -y wget git build-essential libopencv-dev cmake libgt
 
 [Click here](#ubuntu-18) for instructions on building sample apps for Ubuntu 18.
 
-[Click here](#ubuntu-16) for instruction on building sample apps for Ubuntu 16. 
+[Click here](#ubuntu-16) for instruction on building sample apps for Ubuntu 16.
 
 ## Ubuntu 18  
 
@@ -71,15 +71,15 @@ mkdir build install
 cd build
 
 CMAKE_ARGS="-DWITH_FFMPEG=ON \
--DBUILD_TESTS=OFF \ 
--DBUILD_PERF_TESTS=OFF \ 
--DCMAKE_BUILD_TYPE=RELEASE \ 
+-DBUILD_TESTS=OFF \
+-DBUILD_PERF_TESTS=OFF \
+-DCMAKE_BUILD_TYPE=RELEASE \
 -DENABLE_PRECOMPILED_HEADERS=OFF \
 -DCMAKE_INSTALL_PREFIX=/path/to/opencv/install"
 
 cmake $CMAKE_ARGS ../
-make -j4 
-make install 
+make -j4
+make install
 ```
 ----
 ### Building Samples with CMake
@@ -104,7 +104,7 @@ CMAKE_ARGS="-DCMAKE_BUILD_TYPE=Release \
 -DOpenCV_DIR=/path/to/opencv/install/share/OpenCV \
 -DCMAKE_INSTALL_PREFIX=/path/to/cpp-sdk-samples/vision/vision-samples-install"
 
-cmake $CMAKE_ARGS /path/to/cpp-sdk-samples/vision 
+cmake $CMAKE_ARGS /path/to/cpp-sdk-samples/vision
 make -j4
 make install
 
@@ -120,7 +120,7 @@ $ ../config.sh
 
 ## Ubuntu 16
 
-### Boost 
+### Boost
 ```
 $ mkdir boost-build
 $ cd boost-build
@@ -160,7 +160,7 @@ CMAKE_ARGS="-DCMAKE_BUILD_TYPE=Release \
 -DOpenCV_DIR=/usr/ \
 -DCMAKE_INSTALL_PREFIX=/path/to/cpp-sdk-samples/vision/vision-samples-install"
 
-cmake $CMAKE_ARGS /path/to/cpp-sdk-samples/vision 
+cmake $CMAKE_ARGS /path/to/cpp-sdk-samples/vision
 make -j4
 make install
 

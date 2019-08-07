@@ -15,6 +15,9 @@ CONFIG_COMPILER_11()
 CONFIG_LINKER()
 SETUP_INSTALL_DIRS()
 
+# SUPRRESS DEPRECATION WARNINGS 
+add_compile_options(-Wno-deprecated -Wno-deprecated-declarations)
+
 # --------------------
 # DEPENDENCIES
 # --------------------
