@@ -72,6 +72,14 @@ Visualizer::Visualizer():
         {Mood::POSITIVE, "POSITIVE"},
     };
 
+    AGE_CATEGORIES = {
+        {AgeCategory::BABY, "BABY"},
+        {AgeCategory::CHILD, "CHILD"},
+        {AgeCategory::TEEN, "TEEN"},
+        {AgeCategory::ADULT, "ADULT"},
+        {AgeCategory::UNKNOWN, "UNKNOWN"}
+    };
+
 }
 
 void Visualizer::drawFaceMetrics(Face face, std::vector<Point> bounding_box, bool draw_face_id)
@@ -95,18 +103,34 @@ void Visualizer::drawFaceMetrics(Face face, std::vector<Point> bounding_box, boo
         }
     }
 
+    //Draw Head Angles
+    drawHeadOrientation(face.getMeasurements(), bounding_box[1].x , padding, false);
+
     padding = bounding_box[0].y;  //Top right Y
     if (draw_face_id) {
         drawText("ID", std::to_string(face.getId()), cv::Point(bounding_box[0].x, padding + spacing), false, cv::Scalar(255, 255, 255));
     }
-    //Draw Head Angles
-    drawHeadOrientation(face.getMeasurements(), bounding_box[0].x - spacing, padding);
 
     //Draw Left side metrics
     auto emotions = face.getEmotions();
     for (auto& emo : EMOTIONS) {
         drawClassifierOutput(emo.second, emotions.at(emo.first), cv::Point(bounding_box[0].x, padding += spacing), true);
     }
+
+    //Draw identity
+    auto identity = face.getIdentityMetric();
+    drawText("identity", std::to_string(identity.id), cv::Point(bounding_box[0].x, padding += spacing), true);
+    drawClassifierOutput("identity_confidence", identity.confidence, cv::Point(bounding_box[0].x, padding += spacing), true);
+
+    //Draw age
+    auto age = face.getAgeMetric();
+    drawText("age", std::to_string(age.years), cv::Point(bounding_box[0].x, padding += spacing), true);
+    drawClassifierOutput("age_confidence", age.confidence, cv::Point(bounding_box[0].x, padding += spacing), true);
+
+    //Draw age category
+    auto age_category = face.getAgeCategoryMetric().category;
+    drawText("age_category", AGE_CATEGORIES.at(age_category), cv::Point(bounding_box[0].x, padding += spacing),
+            true);
 }
 
 void Visualizer::updateImage(cv::Mat output_img)
@@ -152,7 +176,7 @@ void Visualizer::drawBoundingBox(std::vector<Point> bounding_box, float valence)
  * @param color         -- Color
  */
 void Visualizer::drawText(const std::string& name, const std::string& value,
-                          const cv::Point2f loc, bool align_right, cv::Scalar color)
+                          const cv::Point2f loc, bool align_right, cv::Scalar color, cv::Scalar bg_color)
 {
     const int block_width = 8;
     const int margin = 2;
@@ -169,6 +193,7 @@ void Visualizer::drawText(const std::string& name, const std::string& value,
         cv::Size txtSize = cv::getTextSize(label, cv::FONT_HERSHEY_SIMPLEX, 0.5f, 5,&baseline);
         display_loc.x -= txtSize.width;
     }
+    cv::putText(img, label+value, display_loc, cv::FONT_HERSHEY_SIMPLEX, 0.5f, bg_color, 5);
     cv::putText(img, label+value, display_loc, cv::FONT_HERSHEY_SIMPLEX, 0.5f, color, 1);
 }
 
@@ -263,7 +288,7 @@ void Visualizer::drawHeadOrientation(std::map<Measurement, float> headAngles, co
     ss << std::fixed << std::setw(3) << std::setprecision(1);
     for (auto& h: HEAD_ANGLES) {
         ss << headAngles.at(h.first);
-        drawText(h.second, ss.str(), cv::Point(x, padding += spacing), align_right, color );
+        drawText(h.second, ss.str(), cv::Point(x, padding += spacing), align_right, color);
         ss.str(""); // clear the string.
     }
 }
