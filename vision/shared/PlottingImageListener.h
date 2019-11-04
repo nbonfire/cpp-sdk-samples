@@ -143,7 +143,7 @@ public:
             auto age_metric = f.getAgeMetric();
             out_stream << age_metric.years << "," << age_metric.confidence << ",";
 
-            auto age_category = f.getAgeCategoryMetric().category;
+            auto age_category = f.getAgeCategory();
             out_stream << viz.AGE_CATEGORIES.at(age_category);
 
             out_stream << std::endl;

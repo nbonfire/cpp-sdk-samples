@@ -128,7 +128,7 @@ void Visualizer::drawFaceMetrics(Face face, std::vector<Point> bounding_box, boo
     drawClassifierOutput("age_confidence", age.confidence, cv::Point(bounding_box[0].x, padding += spacing), true);
 
     //Draw age category
-    auto age_category = face.getAgeCategoryMetric().category;
+    auto age_category = face.getAgeCategory();
     drawText("age_category", AGE_CATEGORIES.at(age_category), cv::Point(bounding_box[0].x, padding += spacing),
             true);
 }
