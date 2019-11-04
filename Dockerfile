@@ -71,8 +71,8 @@ RUN wget --quiet https://sourceforge.net/projects/boost/files/boost/1.63.0/boost
 WORKDIR $SRC_DIR
 ARG AFFECTIVA_AUTO_SDK_2_0_URL
 RUN wget --quiet $AFFECTIVA_AUTO_SDK_2_0_URL  &&\
-    tar -xf affectiva-auto-sdk* && \
-    rm -r $SRC_DIR/affectiva-auto-sdk-ubuntu-xenial-xerus-*
+    tar -xf affectiva-ics-sdk* && \
+    rm -r $SRC_DIR/affectiva-ics-sdk-ubuntu-xenial-xerus-*
 
 #### BUILD SAMPLE APPS FOR VISION ####
 RUN mkdir -p $VISION_BUILD_DIR &&\
