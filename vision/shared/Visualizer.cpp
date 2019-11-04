@@ -73,11 +73,11 @@ Visualizer::Visualizer():
     };
 
     AGE_CATEGORIES = {
+        {AgeCategory::UNKNOWN, "UNKNOWN"},
         {AgeCategory::BABY, "BABY"},
         {AgeCategory::CHILD, "CHILD"},
         {AgeCategory::TEEN, "TEEN"},
-        {AgeCategory::ADULT, "ADULT"},
-        {AgeCategory::UNKNOWN, "UNKNOWN"}
+        {AgeCategory::ADULT, "ADULT"}
     };
 
 }
