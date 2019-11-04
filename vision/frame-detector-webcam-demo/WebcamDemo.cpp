@@ -155,7 +155,7 @@ int main(int argsc, char ** argsv) {
 
 
         // configure the FrameDetector by enabling features and assigning listeners
-        frame_detector->enable({ vision::Feature::EMOTIONS, vision::Feature::EXPRESSIONS });
+        frame_detector->enable({ vision::Feature::EMOTIONS, vision::Feature::EXPRESSIONS, vision::Feature::IDENTITY, vision::Feature::APPEARANCES});
         frame_detector->setImageListener(&image_listener);
         frame_detector->setFaceListener(&face_listener);
         frame_detector->setProcessStatusListener(&status_listener);

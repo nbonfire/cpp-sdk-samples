@@ -36,6 +36,7 @@ public:
         for (const auto& emotion : viz.EMOTIONS) out_stream << emotion.second << ",";
         for (const auto& expression : viz.EXPRESSIONS) out_stream << expression.second << ",";
         out_stream << "mood,dominantEmotion,dominantEmotionConfidence";
+        out_stream << "identity,identityConfidence,age,ageConfidence,ageCategory";
         out_stream << std::endl;
         out_stream.precision(2);
         out_stream << std::fixed;
@@ -101,7 +102,7 @@ public:
             for (const auto& angle : viz.HEAD_ANGLES) out_stream << "nan,";
             for (const auto& emotion : viz.EMOTIONS) out_stream << "nan,";
             for (const auto& expression : viz.EXPRESSIONS) out_stream << "nan,";
-            out_stream << "nan,nan,nan,"; // mood, dominant emotion, dominant emotion confidence
+            out_stream << "nan,nan,nan,nan,nan,nan,nan,nan"; // mood, dominant emotion, dominant emotion confidence, identity, identity_confidence, age, age_confidence, age_category
             out_stream << std::endl;
         }
 
@@ -134,7 +135,16 @@ public:
             out_stream << viz.MOODS[mood] << ",";
 
             vision::DominantEmotionMetric dominant_emotion_metric = f.getDominantEmotion();
-            out_stream << viz.DOMINANT_EMOTIONS[dominant_emotion_metric.dominantEmotion] << "," << dominant_emotion_metric.confidence;
+            out_stream << viz.DOMINANT_EMOTIONS[dominant_emotion_metric.dominantEmotion] << "," << dominant_emotion_metric.confidence << ",";
+
+            auto identity_metric = f.getIdentityMetric();
+            out_stream << identity_metric.id << "," << identity_metric.confidence << ",";
+
+            auto age_metric = f.getAgeMetric();
+            out_stream << age_metric.years << "," << age_metric.confidence << ",";
+
+            auto age_category = f.getAgeCategory();
+            out_stream << viz.AGE_CATEGORIES.at(age_category);
 
             out_stream << std::endl;
         }
