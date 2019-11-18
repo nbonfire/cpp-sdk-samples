@@ -35,7 +35,7 @@ public:
         for (const auto& angle : viz.HEAD_ANGLES) out_stream << angle.second << ",";
         for (const auto& emotion : viz.EMOTIONS) out_stream << emotion.second << ",";
         for (const auto& expression : viz.EXPRESSIONS) out_stream << expression.second << ",";
-        out_stream << "mood,dominantEmotion,dominantEmotionConfidence";
+        out_stream << "mood,dominantEmotion,dominantEmotionConfidence,";
         out_stream << "identity,identityConfidence,age,ageConfidence,ageCategory";
         out_stream << std::endl;
         out_stream.precision(2);
