@@ -119,12 +119,16 @@ void Visualizer::drawFaceMetrics(Face face, std::vector<Point> bounding_box, boo
 
     //Draw identity
     auto identity = face.getIdentityMetric();
-    drawText("identity", std::to_string(identity.id), cv::Point(bounding_box[0].x, padding += spacing), true);
+    std::string id_content;
+    identity.id == -1 ? id_content = "UNKNOWN" : id_content = std::to_string(identity.id);
+    drawText("identity", id_content, cv::Point(bounding_box[0].x, padding += spacing), true);
     drawClassifierOutput("identity_confidence", identity.confidence, cv::Point(bounding_box[0].x, padding += spacing), true);
 
     //Draw age
     auto age = face.getAgeMetric();
-    drawText("age", std::to_string(age.years), cv::Point(bounding_box[0].x, padding += spacing), true);
+    std::string age_content;
+    age.years == -1 ? age_content = "UNKNOWN" : age_content = std::to_string(age.years);
+    drawText("age", age_content, cv::Point(bounding_box[0].x, padding += spacing), true);
     drawClassifierOutput("age_confidence", age.confidence, cv::Point(bounding_box[0].x, padding += spacing), true);
 
     //Draw age category

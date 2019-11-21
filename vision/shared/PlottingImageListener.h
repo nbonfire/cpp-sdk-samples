@@ -138,10 +138,14 @@ public:
             out_stream << viz.DOMINANT_EMOTIONS[dominant_emotion_metric.dominantEmotion] << "," << dominant_emotion_metric.confidence << ",";
 
             auto identity_metric = f.getIdentityMetric();
-            out_stream << identity_metric.id << "," << identity_metric.confidence << ",";
+            std::string id_content;
+            identity_metric.id == -1 ? id_content = "UNKNOWN" : std::to_string(identity_metric.id);
+            out_stream << id_content << "," << identity_metric.confidence << ",";
 
             auto age_metric = f.getAgeMetric();
-            out_stream << age_metric.years << "," << age_metric.confidence << ",";
+            std::string age_content;
+            age_metric.years == -1 ? age_content = "UNKNOWN" : std::to_string(age_metric.years);
+            out_stream << age_content << "," << age_metric.confidence << ",";
 
             auto age_category = f.getAgeCategory();
             out_stream << viz.AGE_CATEGORIES.at(age_category);
