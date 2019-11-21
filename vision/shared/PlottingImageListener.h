@@ -139,12 +139,12 @@ public:
 
             auto identity_metric = f.getIdentityMetric();
             std::string id_content;
-            identity_metric.id == -1 ? id_content = "UNKNOWN" : std::to_string(identity_metric.id);
+            identity_metric.id == -1 ? id_content = "UNKNOWN" : id_content = std::to_string(identity_metric.id);
             out_stream << id_content << "," << identity_metric.confidence << ",";
 
             auto age_metric = f.getAgeMetric();
             std::string age_content;
-            age_metric.years == -1 ? age_content = "UNKNOWN" : std::to_string(age_metric.years);
+            age_metric.years == -1 ? age_content = "UNKNOWN" : age_content = std::to_string(age_metric.years);
             out_stream << age_content << "," << age_metric.confidence << ",";
 
             auto age_category = f.getAgeCategory();
