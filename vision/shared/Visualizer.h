@@ -57,6 +57,7 @@ public:
     std::vector<std::pair<affdex::vision::Measurement, std::string>> HEAD_ANGLES;
     std::map<affdex::vision::DominantEmotion, std::string> DOMINANT_EMOTIONS;
     std::map<affdex::vision::Mood, std::string> MOODS;
+    std::map<affdex::vision::AgeCategory, std::string> AGE_CATEGORIES;
 
 private:
 
@@ -96,7 +97,8 @@ private:
     * @param color       -- Color
     */
     void drawText(const std::string& name, const std::string& value,
-                  const cv::Point2f loc, bool align_right=false, cv::Scalar color=cv::Scalar(255,255,255));
+                  const cv::Point2f loc, bool align_right=false, cv::Scalar color=cv::Scalar(255,255,255),
+                          cv::Scalar bg_color=cv::Scalar(50,50,50));
 
     std::set<std::string> GREEN_COLOR_CLASSIFIERS;
     std::set<std::string> RED_COLOR_CLASSIFIERS;
