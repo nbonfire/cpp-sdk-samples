@@ -18,7 +18,7 @@
 #        affectiva-auto:v2.0-ics
 #
 # Then from the shell, run the following for the webcam demo:
-# $ /opt/testapp-artifact/build/vision/bin/frame-detector-webcam-demo -d $AUTO_SDK_DIR/data/vision
+# $ /opt/testapp-artifact/build/vision/bin/frame-detector-webcam-demo -d $AUTO_SDK_DIR/data
 #
 # Or, you can check the docker-compose.yml file for options to build and run using docker-compose (recommended)
 
