@@ -25,11 +25,12 @@ public:
     VideoReader(const boost::filesystem::path& file_path, const unsigned int sampling_frame_rate) :
         sampling_frame_rate(sampling_frame_rate) {
 
-        if (sampling_frame_rate < 0)
+        if (sampling_frame_rate < 0) {
             throw runtime_error("Specified sampling rate is < 0");
+        }
 
-        last_timestamp_ms = sampling_frame_rate == 0 ? -1 : (0 - 1000 / sampling_frame_rate); // Initialize so that with sampling, we always process the first frame.
-
+        // Initialize so that with sampling, we always process the first frame.
+        last_timestamp_ms = sampling_frame_rate == 0 ? -1 : -1000 / sampling_frame_rate;
 
         std::set<boost::filesystem::path> SUPPORTED_EXTS = {
             // Videos
@@ -47,11 +48,12 @@ public:
         }
 
         cap.open(file_path.string());
-        if (!cap.isOpened())
+        if (!cap.isOpened()) {
             throw runtime_error("Error opening video/image file: " + file_path.string());
+        }
     }
 
-    bool GetFrame(cv::Mat &bgr_frame, timestamp& timestamp_ms) {
+    bool GetFrame(cv::Mat& bgr_frame, timestamp& timestamp_ms) {
         bool frame_data_loaded;
 
         do {
@@ -65,7 +67,7 @@ public:
         return frame_data_loaded;
     }
 
-    bool GetFrameData(cv::Mat &bgr_frame, timestamp& timestamp_ms) {
+    bool GetFrameData(cv::Mat& bgr_frame, timestamp& timestamp_ms) {
         static const int MAX_ATTEMPTS = 2;
         timestamp prev_timestamp_ms = cap.get(::CV_CAP_PROP_POS_MSEC);
         bool frame_found = cap.grab();
@@ -104,8 +106,7 @@ private:
     unsigned int sampling_frame_rate;
 };
 
-
-int main(int argsc, char ** argsv) {
+int main(int argsc, char** argsv) {
 
     const int precision = 2;
     std::cerr << std::fixed << std::setprecision(precision);
@@ -122,28 +123,31 @@ int main(int argsc, char ** argsv) {
     bool disable_logging = false;
 
     namespace po = boost::program_options; // abbreviate namespace
-
-    po::options_description description("Project for demoing the Affectiva FrameDetector class (processing video files).");
-    description.add_options()
-        ("help,h", po::bool_switch()->default_value(false), "Display this help message.")
+    int foo = 1
+        + 2;
+    po::options_description
+        description("Project for demoing the Affectiva SyncFrameDetector class (processing video files).");
+    description.add_options()("help,h", po::bool_switch()->default_value(false), "Display this help message.")
 #ifdef _WIN32
-        ("data,d", po::wvalue<affdex::path>(&data_dir),
-            std::string("Path to the data folder. Alternatively, specify the path via the environment variable "
-                + DATA_DIR_ENV_VAR + R"(=\path\to\data)").c_str())
-        ("input,i", po::wvalue<affdex::path>(&video_path)->required(), "Video file to processs")
+    ("data,d", po::wvalue<affdex::path>(&data_dir),
+    std::string("Path to the data folder. Alternatively, specify the path via the environment variable "
+    + DATA_DIR_ENV_VAR + R"(=\path\to\data)").c_str())
+("input,i", po::wvalue<affdex::path>(&video_path)->required(), "Video file to processs")
 #else // _WIN32
-        ("data,d", po::value< affdex::path >(&data_dir),
-            (std::string("Path to the data folder. Alternatively, specify the path via the environment variable ")
-            + DATA_DIR_ENV_VAR + "=/path/to/data").c_str())
-        ("input,i", po::value< affdex::path >(&video_path)->required(), "Video file to processs")
+        ("data,d", po::value<affdex::path>(&data_dir),
+         (std::string("Path to the data folder. Alternatively, specify the path via the environment variable ")
+             + DATA_DIR_ENV_VAR + "=/path/to/data").c_str())
+        ("input,i", po::value<affdex::path>(&video_path)->required(), "Video file to processs")
 #endif // _WIN32
-        ("sfps", po::value<unsigned int>(&sampling_frame_rate)->default_value(0), "Input sampling frame rate. Default is 0, which means the app will respect the video's FPS and read all frames")
+        ("sfps",
+         po::value<unsigned int>(&sampling_frame_rate)->default_value(0),
+         "Input sampling frame rate. Default is 0, which means the app will respect the video's FPS and read all frames")
         ("draw", po::value<bool>(&draw_display)->default_value(true), "Draw video on screen.")
         ("numFaces", po::value<unsigned int>(&num_faces)->default_value(1), "Number of faces to be tracked.")
         ("loop", po::bool_switch(&loop)->default_value(false), "Loop over the video being processed.")
-        ("face_id", po::bool_switch(&draw_id)->default_value(false), "Draw face id on screen. Note: Drawing to screen should be enabled.")
-        ("quiet,q", po::bool_switch(&disable_logging)->default_value(false), "Disable logging to console")
-        ;
+        ("face_id", po::bool_switch(&draw_id)->default_value(false),
+         "Draw face id on screen. Note: Drawing to screen should be enabled.")
+        ("quiet,q", po::bool_switch(&disable_logging)->default_value(false), "Disable logging to console");
 
     po::variables_map args;
 
@@ -170,10 +174,10 @@ int main(int argsc, char ** argsv) {
     if (data_dir.empty() && vision_env != nullptr) {
         data_dir = affdex::path(vision_env);
         std::cout << "Using value " << std::string(data_dir.begin(), data_dir.end()) << " from env var "
-            << DATA_DIR_ENV_VAR << std::endl;
+                  << DATA_DIR_ENV_VAR << std::endl;
     }
 
-    if (data_dir.empty() ) {
+    if (data_dir.empty()) {
         std::cerr << "Data directory not specified via command line or env var: " << DATA_DIR_ENV_VAR << std::endl;
         std::cerr << description << std::endl;
         return 1;
@@ -203,17 +207,18 @@ int main(int argsc, char ** argsv) {
             return 1;
         }
 
-        // create the FrameDetector
+        // create the detector
         detector = std::unique_ptr<vision::SyncFrameDetector>(new vision::SyncFrameDetector(data_dir, num_faces));
 
-        // configure the FrameDetector by enabling features
-        detector->enable({ vision::Feature::EMOTIONS, vision::Feature::EXPRESSIONS, vision::Feature::IDENTITY, vision::Feature::APPEARANCES});
+        // configure the detector by enabling features
+        detector->enable({vision::Feature::EMOTIONS, vision::Feature::EXPRESSIONS, vision::Feature::IDENTITY,
+                          vision::Feature::APPEARANCES});
 
         // prepare listeners
         PlottingImageListener image_listener(csv_file_stream, draw_display, !disable_logging, draw_id);
         StatusListener status_listener;
 
-        // configure the FrameDetector by assigning listeners
+        // configure the detector by assigning listeners
         detector->setImageListener(&image_listener);
         detector->setProcessStatusListener(&status_listener);
 
@@ -227,21 +232,21 @@ int main(int argsc, char ** argsv) {
             cv::Mat mat;
             timestamp timestamp_ms;
             while (video_reader.GetFrame(mat, timestamp_ms)) {
-                // create a Frame from the video input and process it with the FrameDetector
-                vision::Frame f(mat.size().width, mat.size().height, mat.data, vision::Frame::ColorFormat::BGR, timestamp_ms);
+                // create a Frame from the video input and process it with the // Initialize so that with sampling, we always process the first frame.
+                vision::Frame f(mat.size().width, mat.size().height, mat.data, vision::Frame::ColorFormat::BGR,
+                                timestamp_ms);
                 detector->process(f);
                 image_listener.processResults();
             }
 
             cout << "******************************************************************" << endl
-            << "Processed Frame count: " << image_listener.getProcessedFrames() << endl
-            << "Frames w/faces: " << image_listener.getFramesWithFaces() << endl
-            << "Percent of frames w/faces: " << image_listener.getFramesWithFacesPercent() << "%" << endl
-            << "******************************************************************" << endl;
+                 << "Processed Frame count: " << image_listener.getProcessedFrames() << endl
+                 << "Frames w/faces: " << image_listener.getFramesWithFaces() << endl
+                 << "Percent of frames w/faces: " << image_listener.getFramesWithFacesPercent() << "%" << endl
+                 << "******************************************************************" << endl;
 
             detector->reset();
             image_listener.reset();
-
         } while (loop);
 
         detector->stop();
