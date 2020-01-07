@@ -61,8 +61,8 @@ int main(int argsc, char** argsv) {
              (std::string("Path to the data folder. Alternatively, specify the path via the environment variable ")
                  + DATA_DIR_ENV_VAR + "=/path/to/data").c_str())
 #endif // _WIN32
-            ("resolution,r",
-             po::value<std::vector<int>>(&resolution)->default_value(DEFAULT_RESOLUTION, "1280 720")->multitoken(),
+            ("resolution,r", po::value<std::vector<int>>(&resolution)
+                 ->default_value(DEFAULT_RESOLUTION, "1280 720")->multitoken(),
              "Resolution in pixels (2-values): width height")
             ("pfps", po::value<int>(&process_framerate)->default_value(30), "Processing framerate.")
             ("cfps", po::value<int>(&camera_framerate)->default_value(30), "Camera capture framerate.")
@@ -73,8 +73,7 @@ int main(int argsc, char** argsv) {
              po::bool_switch(&sync)->default_value(false),
              "Process frames synchronously. Note this will process all frames captured by the camera and will ignore the value in --pfps")
             ("quiet,q", po::bool_switch(&disable_logging)->default_value(false), "Disable logging to console")
-            ("face_id",
-             po::value<bool>(&draw_id)->default_value(true),
+            ("face_id", po::value<bool>(&draw_id)->default_value(true),
              "Draw face id on screen. Note: Drawing to screen must be enabled.")
             ("file,f", po::value<affdex::path>(&output_file_path), "Name of the output CSV file.");
 
