@@ -42,8 +42,8 @@ Visualizer::Visualizer() :
         {Emotion::FEAR, "fear"},
         {Emotion::SADNESS, "sadness"},
         {Emotion::DISGUST, "disgust"},
-        {Emotion::NEUTRAL, "neutral"},
-        {Emotion::CONTEMPT, "contempt"}
+        {Emotion::NEUTRAL, "neutral"}
+        // {Emotion::CONTEMPT, "contempt"}
     };
 
     HEAD_ANGLES = {
@@ -125,6 +125,10 @@ void Visualizer::drawFaceMetrics(Face face, std::vector<Point> bounding_box, boo
                              cv::Point(bounding_box[0].x, padding += spacing),
                              true);
     }
+
+    //Draw Mood 
+    auto mood = face.getMood();
+    drawText("mood", MOODS[mood], cv::Point(bounding_box[0].x, padding += spacing), true);
 
     //Draw identity
     auto identity = face.getIdentityMetric();
