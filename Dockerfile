@@ -1,12 +1,12 @@
 # A Docker file to be used for building the sample applications for the Linux SDK Ubuntu 16.04
 #
 # build:
-# $ docker build --build-arg AFFECTIVA_AUTO_SDK_2_0_URL=$AFFECTIVA_AUTO_SDK_2_0_URL --build-arg BRANCH=$BRANCH --tag=affectiva-auto:v2.0-ics .
+# $ docker build --build-arg AFFECTIVA_AUTO_SDK_2_1_URL=$AFFECTIVA_AUTO_SDK_2_1_URL --build-arg BRANCH=$BRANCH --tag=affectiva-auto:v2.0-ics .
 #
 # the result will be an image that has the tar'ed artifact of the sample app and all of its dependencies installed
 #
 # run this container interactively:
-# $ docker run -it --rm affectiva-auto:v2.0-ics
+# $ docker run -it --rm affectiva-auto:v2.1-ics
 #
 # running the webcam or mic demos interactively requires some privileges, devices, and access to the X11 socket:
 # $ docker run -it --privileged --rm --net=host \
@@ -15,12 +15,12 @@
 #        -e DISPLAY=$DISPLAY     \
 #        --device=/dev/video0 \
 #        --device=/dev/snd \
-#        affectiva-auto:v2.0-ics
+#        affectiva-auto:v2.1-ics
 #
 # Then from the shell, run the following for the webcam demo:
 # $ /opt/testapp-artifact/build/vision/bin/frame-detector-webcam-demo -d $AUTO_SDK_DIR/data
 #
-# Or, you can check the docker-compose.yml file for options to build and run using docker-compose (recommended)
+
 
 
 FROM ubuntu:16.04
@@ -46,7 +46,7 @@ ENV BUILD_DIR /opt/build
 ENV VISION_BUILD_DIR /opt/build/vision
 ENV SPEECH_BUILD_DIR /opt/build/speech
 ENV ARTIFACT_DIR /opt/testapp-artifact
-ENV AUTO_SDK_DIR $SRC_DIR/affectiva-ics-sdk-2.0.0
+ENV AUTO_SDK_DIR $SRC_DIR/affectiva-ics-sdk-2.1.0
 ENV LD_LIBRARY_PATH $AUTO_SDK_DIR/lib
 ENV LD_PRELOAD /usr/lib/x86_64-linux-gnu/libopencv_core.so.2.4
 
@@ -71,9 +71,9 @@ RUN wget --quiet https://sourceforge.net/projects/boost/files/boost/1.63.0/boost
 
 #### DOWNLOAD AFFECTIVA AUTO SDK ####
 WORKDIR $SRC_DIR
-ARG AFFECTIVA_AUTO_SDK_2_0_URL
+ARG AFFECTIVA_AUTO_SDK_2_1_URL
 RUN mkdir -p $AUTO_SDK_DIR && cd $AUTO_SDK_DIR &&\
-    wget --quiet $AFFECTIVA_AUTO_SDK_2_0_URL  &&\
+    wget --quiet $AFFECTIVA_AUTO_SDK_2_1_URL  &&\
     tar -xf affectiva-ics-sdk* && \
     rm -r $AUTO_SDK_DIR/affectiva-ics-sdk-ubuntu-xenial-xerus-*
 
